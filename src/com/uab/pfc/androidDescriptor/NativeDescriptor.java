@@ -8,7 +8,7 @@ public class NativeDescriptor {
 		System.loadLibrary("descriptor");
 	}
 
-	public native float []descriptor(Bitmap bitmapOrig, Bitmap bitmap);
+	public native float []descriptor(String path);
 	
 	/** 
 	 * Adds two integers, returning their sum

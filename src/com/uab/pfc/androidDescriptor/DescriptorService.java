@@ -85,18 +85,13 @@ public class DescriptorService extends IntentService{
 						String.valueOf(contador) + "/" +
 						String.valueOf(archivos.length) + ")");
 				
-		    	bitmapOrig = BitmapFactory.decodeFile(root.getAbsolutePath() + DIRECTORIOIMGDEFECTO + archivo, options);
-		    	bitmap = Bitmap.createBitmap(bitmapOrig.getWidth(),bitmapOrig.getHeight(),
-		    			Config.ALPHA_8);
-		    	
-		    	
-		    	/****/
+
 		    	for (i = 0; i < n_ejecuciones; i++) {
 		    		Log.i(TAG, "Iteracion " + String.valueOf(i));
-		    		profiling = native_descriptor.descriptor(bitmapOrig, bitmap);
+		    		profiling = native_descriptor.descriptor(root.getAbsolutePath() + DIRECTORIOIMGDEFECTO + archivo);
 	
 		    		for (j = 0; j < 14; j++)
-		    			tiempos[i][j] = profiling[j+1];
+		    			tiempos[i][j] = profiling[j+3];
 		    	}
 	
 		    	for (j = 0; j < 14; j++)
@@ -118,9 +113,9 @@ public class DescriptorService extends IntentService{
 		    	/****/
 		    	
 				
-				impr = String.valueOf(bitmapOrig.getWidth()) + ";" +
-					   String.valueOf(bitmapOrig.getHeight()) + ";"+
-					   String.valueOf((int)profiling[0]) + ";";
+				impr = String.valueOf((int)profiling[0]) + ";" +
+					   String.valueOf((int)profiling[1]) + ";"+
+					   String.valueOf((int)profiling[2]) + ";";
 				
 				
 				/****/
