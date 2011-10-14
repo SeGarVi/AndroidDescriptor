@@ -31,19 +31,14 @@ public class AndroidDescriptor extends Activity {
 	
 	private static final String TAG = "AndroidDescriptor";
 	
-	private static String DIRECTORIODEFECTO =
-											"/AndroidDescriptor/";
-	private static String DIRECTORIOLOGDEFECTO =
-											"/AndroidDescriptor/output/";
-	private static String DIRECTORIOIMGDEFECTO =
-											"/PFC/imgs/";
+	private static String DIRECTORIODEFECTO    = "/AndroidDescriptor/";
+	private static String DIRECTORIOLOGDEFECTO = "/AndroidDescriptor/output/";
+	private static String DIRECTORIOIMGDEFECTO = "/PFC/imgs/";
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
-	    //native_descriptor = new NativeDescriptor();
 
 	    // Setup the UI
 	    Button button = (Button) findViewById(R.id.button1);
@@ -51,8 +46,8 @@ public class AndroidDescriptor extends Activity {
 	    
 	    button.setOnClickListener(new OnClickListener() {
 		    public void onClick(View v) {
-		    	startService(new Intent(AndroidDescriptor.this , DescriptorService.class));   
-		    	//Test();
+		    	startService(new Intent(AndroidDescriptor.this ,
+		    					DescriptorService.class));   
 		    }
 	    });
         

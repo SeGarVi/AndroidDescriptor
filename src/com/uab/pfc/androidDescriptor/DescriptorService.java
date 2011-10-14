@@ -17,31 +17,26 @@ import android.util.Log;
 
 public class DescriptorService extends IntentService{
 
-	public DescriptorService() {
-		super("DescriptorService");
-		// TODO Auto-generated constructor stub
-	}
 	NativeDescriptor native_descriptor;
 	
 	private static final String TAG = "AndroidDescriptor";
 	
-	private static String DIRECTORIODEFECTO =
-			"/AndroidDescriptor/";
-	private static String DIRECTORIOLOGDEFECTO =
-				"/AndroidDescriptor/output/";
-	private static String DIRECTORIOIMGDEFECTO =
-				"/PFC/imgs/";
+	private static String DIRECTORIODEFECTO    = "/AndroidDescriptor/";
+	private static String DIRECTORIOLOGDEFECTO = "/AndroidDescriptor/output/";
+	private static String DIRECTORIOIMGDEFECTO = "/PFC/imgs/";
 	private int n_ejecuciones = 5;
 	
-
-	float []profiling;
+	private float []profiling;
+	
+	public DescriptorService() {
+		super("DescriptorService");
+	}
 	
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 	
 	@Override	
 	public void onCreate() {    
@@ -49,11 +44,13 @@ public class DescriptorService extends IntentService{
 	    native_descriptor = new NativeDescriptor();
 	    Intent intent=new Intent("com.uab.pfc.androidDescriptor.DescriptorService");  
 	    this.startService(intent);
-	}	
+	}
+	
 	@Override	
 	public void onDestroy() {	
 
-		}	
+	}
+	
 	@Override
 	public void onHandleIntent(Intent arg0) {
 		Bitmap bitmapOrig = null;
@@ -71,7 +68,10 @@ public class DescriptorService extends IntentService{
     	
     	// load bitmap from resources
         BitmapFactory.Options options = new BitmapFactory.Options();
-        // Make sure it is 24 bit color as our image processing algorithm expects this format
+        
+        /* Make sure it is 24 bit color as our
+         * image processing algorithm expects this format
+         */
         options.inPreferredConfig = Config.ARGB_8888;
     	
     	directorio = new File(root.getAbsolutePath() + DIRECTORIOIMGDEFECTO);
@@ -80,17 +80,19 @@ public class DescriptorService extends IntentService{
     	for (String archivo : archivos) {
     		if (!archivo.equals(".directory")) {
 				contador++;
-				Log.i(TAG, "Analizando " +
-						archivo 	  + " (" +
-						String.valueOf(contador) + "/" +
-						String.valueOf(archivos.length) + ")");
+				Log.i(TAG, "Analizando " + archivo 	        + " (" +
+							String.valueOf(contador)        + "/"  +
+							String.valueOf(archivos.length) + ")");
 				
-		    	bitmapOrig = BitmapFactory.decodeFile(root.getAbsolutePath() + DIRECTORIOIMGDEFECTO + archivo, options);
-		    	bitmap = Bitmap.createBitmap(bitmapOrig.getWidth(),bitmapOrig.getHeight(),
-		    			Config.ALPHA_8);
+		    	bitmapOrig = BitmapFactory.decodeFile(root.getAbsolutePath() +
+		    										  DIRECTORIOIMGDEFECTO 	 +
+		    										  archivo, options);
+		    	
+		    	bitmap = Bitmap.createBitmap(bitmapOrig.getWidth(),
+		    								 bitmapOrig.getHeight(),
+		    								 Config.ALPHA_8);		    	
 		    	
 		    	
-		    	/****/
 		    	for (i = 0; i < n_ejecuciones; i++) {
 		    		Log.i(TAG, "Iteracion " + String.valueOf(i));
 		    		profiling = native_descriptor.descriptor(bitmapOrig, bitmap);
@@ -115,35 +117,28 @@ public class DescriptorService extends IntentService{
 		    		desviaciones[j] /= n_ejecuciones;
 		    		desviaciones[j] = Math.sqrt(desviaciones[j]);
 		    	}
-		    	/****/
-		    	
 				
-				impr = String.valueOf(bitmapOrig.getWidth()) + ";" +
-					   String.valueOf(bitmapOrig.getHeight()) + ";"+
-					   String.valueOf((int)profiling[0]) + ";";
+				impr = String.valueOf(bitmapOrig.getWidth())  + ";" +
+					   String.valueOf(bitmapOrig.getHeight()) + ";" +
+					   String.valueOf((int)profiling[0])      + ";";
 				
-				
-				/****/
 				for (i = 0; i < 14; i++)
 					impr += String.valueOf(medias[i]) + ";";
 	
 				for (i = 0; i < 13; i++)
 					impr += String.valueOf(desviaciones[i]) + ";";
 				impr += String.valueOf(desviaciones[13]);
-				 /****/
 				
-				/*for (i = 0; i < profiling.length; i++) {
-					impr += String.valueOf(profiling[i]) + ";";
-				}*/
-				
-				Log.i(TAG, "Finalizado " +
-						archivo 	  + " (" +
-						String.valueOf(contador) + "/" +
-						String.valueOf(archivos.length) + ")");
+				Log.i(TAG, "Finalizado " + archivo 	        + " (" +
+						    String.valueOf(contador)        + "/"  +
+						    String.valueOf(archivos.length) + ")");
 				
 				try {
 				    if (root.canWrite()){
-				        File gpxfile = new File(root.getAbsolutePath() + DIRECTORIOLOGDEFECTO,  archivo + ".prof");
+				        File gpxfile = new File(root.getAbsolutePath() +
+				        						DIRECTORIOLOGDEFECTO, 
+				        						archivo + ".prof");
+				        
 				        FileWriter gpxwriter = new FileWriter(gpxfile);
 				        BufferedWriter out = new BufferedWriter(gpxwriter);
 				        out.write(impr);
